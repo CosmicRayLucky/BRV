@@ -986,7 +986,11 @@ open class BindingAdapter : RecyclerView.Adapter<BindingAdapter.BindingViewHolde
         scrollTop: Boolean = false,
         @IntRange(from = -1) depth: Int = 0,
     ): Int {
-        val holder = rv?.findViewHolderForLayoutPosition(position) as? BindingViewHolder ?: return 0
+        val holder = rv?.findViewHolderForLayoutPosition(position) as? BindingViewHolder ?: run {
+            createViewHolder(rv ?: return 0, getItemViewType(position)).apply {
+                bindViewHolder(this, position)
+            }
+        }
         return holder.expand(scrollTop, depth)
     }
 
@@ -997,7 +1001,11 @@ open class BindingAdapter : RecyclerView.Adapter<BindingAdapter.BindingViewHolde
      * @return 折叠后消失的条目数量
      */
     fun collapse(@IntRange(from = 0) position: Int, @IntRange(from = -1) depth: Int = 0): Int {
-        val holder = rv?.findViewHolderForLayoutPosition(position) as? BindingViewHolder ?: return 0
+        val holder = rv?.findViewHolderForLayoutPosition(position) as? BindingViewHolder ?: run {
+            createViewHolder(rv ?: return 0, getItemViewType(position)).apply {
+                bindViewHolder(this, position)
+            }
+        }
         return holder.collapse(depth)
     }
 
